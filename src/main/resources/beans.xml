@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans>
+	
+	<context>
+		<param name="dbtype" value="mysql" />
+	</context>
+	
+	<!--  datasource -->
+	<bean id="datasource" class="com.asiainfo.commonpool.datasource.SimpleDataSource">
+		<property type="java.lang.String" name="driverClassName" value="com.mysql.jdbc.Driver" />
+        <property type="java.lang.String" name="url" value="jdbc:mysql://localhost:3306/fqc?useUnicode=true&amp;characterEncoding=utf8" />
+        <property type="java.lang.String" name="username" value="root" />
+        <property type="java.lang.String" name="password" value="admin" />
+		<property type="int" name="initialSize" value="5" />
+		<property type="int" name="maxActive" value="50" />
+		<property type="int" name="minIdle" value="10" />
+		<property type="int" name="maxIdle" value="20" />
+		<property type="boolean" name="testOnBorrow" value="true" />
+		<property type="java.lang.String" name="validationQuery" value="select 1 from dual" />
+	</bean>
+	
+	<!-- dao -->
+	<bean id="userDao" class="com.asiainfo.simulation.test.dao.UserDaoOracleImpl">
+		<property name="datasource" ref="datasource"/>
+	</bean>
+	<bean id="userDao" class="com.asiainfo.simulation.test.dao.UserDaoMysqlImpl">
+		<property name="datasource" ref="datasource"/>
+	</bean>
+	<bean id="addressDao" class="com.asiainfo.simulation.test.dao.AddressDaoOracleImpl">
+		<property name="datasource" ref="datasource"/>
+	</bean>
+	<bean id="addressDao" class="com.asiainfo.simulation.test.dao.AddressDaoMysqlImpl">
+		<property name="datasource" ref="datasource"/>
+	</bean>
+	
+	<!-- service -->
+	<bean id="userService" class="com.asiainfo.simulation.test.service.UserServiceImpl" >
+		<property name="userDao" ref="userDao"/>
+		<property name="addressDao" ref="addressDao"/>
+	</bean>
+	
+	<!-- transaction -->
+	<bean id="txManager" class="com.asiainfo.simulation.tx.TxManager">
+		<property name="datasource" ref="datasource"/>
+	</bean>
+	<aop proxy="com.asiainfo.simulation.aop.ProxyFactoryBean">
+		<property name="advice" ref="txManager"/>
+		<property name="target" ref="userService"/>
+	</aop>
+</beans>
