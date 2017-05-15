@@ -1,6 +1,7 @@
 package com.asiainfo.simulation.aop;
 
 import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 
@@ -22,9 +23,14 @@ public class ProxyFactoryBean {
             		public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
 
             			advice.beforeMethod(method);// 执行【前置】增强方法 
-            			Object retVal = method.invoke(target, args);// 执行目标方法
-            			advice.afterMethod(method);// 执行【后置】增强方法 
-  
+            			Object retVal = null;
+            			try {
+            				retVal = method.invoke(target, args);// 执行目标方法
+            			} catch (InvocationTargetException ex) {
+            				advice.onException(method);
+            				throw new RuntimeException(ex.getTargetException());
+            			}
+            			advice.afterMethod(method);// 执行【后置】增强方法
             			return retVal;// 返回目标方法执行结果，代理对象的方法返回值必须与目标对象的方法返回值相同 
             		}
         });

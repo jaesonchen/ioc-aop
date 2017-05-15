@@ -44,4 +44,23 @@ public class TxManager implements IAdvice {
 			throw new RuntimeException(ex.getMessage());
 		}
 	}
+
+	/* 
+	 * @Description: TODO
+	 * @param method
+	 * @see com.asiainfo.simulation.aop.advice.IAdvice#onException(java.lang.reflect.Method)
+	 */
+	@Override
+	public void onException(Method method) {
+		
+		try {
+			Connection conn = ConnectionHolder.getConnection(datasource);
+			ConnectionHolder.release();
+			if (ConnectionHolder.ifRollback())
+				conn.rollback();
+			ConnectionHolder.releaseConnection(datasource);
+		} catch (SQLException ex) {
+			throw new RuntimeException(ex.getMessage());
+		}
+	}
 }

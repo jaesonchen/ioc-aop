@@ -6,6 +6,8 @@ public interface IAdvice {
 	
 	// 前置增强方法 
     void beforeMethod(Method method);
+    
+    void onException(Method method);
   
     // 后置增强方法 
     void afterMethod(Method method);

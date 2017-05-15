@@ -39,6 +39,15 @@ public class ConnectionHolder {
 		}
 		return handle.getReference() == 0;
 	}
+
+	public static boolean ifRollback() {
+		
+		ConnectionHandler handle = local.get();
+		if (handle == null) {
+			throw new RuntimeException("connection is null, can not rollback transaction!");
+		}
+		return handle.getReference() == 0;
+	}
 	
 	public static Connection getConnection(DataSource datasource) throws SQLException {
 		
