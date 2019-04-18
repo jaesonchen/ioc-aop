@@ -9,7 +9,13 @@ import javax.sql.DataSource;
 import com.asiainfo.simulation.aop.advice.IAdvice;
 import com.asiainfo.simulation.support.ConnectionHolder;
 
-
+/**
+ * 
+ * @Description: 事务管理器，aop实现，在进入方法时获取连接，退出时释放连接，并判断是否提交事务
+ * @author chenzq  
+ * @date 2019年2月4日 上午9:05:22
+ * @version V1.0
+ */
 public class TxManager implements IAdvice {
 
 	private DataSource datasource;
@@ -24,8 +30,9 @@ public class TxManager implements IAdvice {
 			Connection conn = ConnectionHolder.getConnection(datasource);
 			ConnectionHolder.requested();
 			
-			if (conn.getAutoCommit())
+			if (conn.getAutoCommit()) {
 				conn.setAutoCommit(false);
+			}
 		} catch (SQLException ex) {
 			throw new RuntimeException(ex.getMessage());
 		}
@@ -37,8 +44,9 @@ public class TxManager implements IAdvice {
 		try {
 			Connection conn = ConnectionHolder.getConnection(datasource);
 			ConnectionHolder.release();
-			if (ConnectionHolder.ifCommit())
+			if (ConnectionHolder.ifCommit()) {
 				conn.commit();
+			}
 			ConnectionHolder.releaseConnection(datasource);
 		} catch (SQLException ex) {
 			throw new RuntimeException(ex.getMessage());
@@ -56,8 +64,9 @@ public class TxManager implements IAdvice {
 		try {
 			Connection conn = ConnectionHolder.getConnection(datasource);
 			ConnectionHolder.release();
-			if (ConnectionHolder.ifRollback())
+			if (ConnectionHolder.ifRollback()) {
 				conn.rollback();
+			}
 			ConnectionHolder.releaseConnection(datasource);
 		} catch (SQLException ex) {
 			throw new RuntimeException(ex.getMessage());

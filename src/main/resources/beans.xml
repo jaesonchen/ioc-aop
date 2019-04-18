@@ -43,6 +43,8 @@
 	<bean id="txManager" class="com.asiainfo.simulation.tx.TxManager">
 		<property name="datasource" ref="datasource"/>
 	</bean>
+	
+	<!-- tx aop -->
 	<aop proxy="com.asiainfo.simulation.aop.ProxyFactoryBean">
 		<property name="advice" ref="txManager"/>
 		<property name="target" ref="userService"/>

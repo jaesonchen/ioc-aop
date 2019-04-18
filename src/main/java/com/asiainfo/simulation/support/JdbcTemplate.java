@@ -26,9 +26,9 @@ public class JdbcTemplate {
 	//这里是实现事物控制的关键
 	public Connection getConnection() throws SQLException {
 		
-		if (ConnectionHolder.isInTransaction())
+		if (ConnectionHolder.isInTransaction()) {
 			return ConnectionHolder.getConnection(this.datasource);
-		
+		}
 		return this.datasource.getConnection();
 	}
 	
@@ -58,12 +58,12 @@ public class JdbcTemplate {
 			convertSQLException(ex);
 		} finally {
 			try {
-			if (rs != null) {
-				rs.close();
-			}
-			if (stmt != null) {
-				stmt.close();
-			}
+    			if (rs != null) {
+    				rs.close();
+    			}
+    			if (stmt != null) {
+    				stmt.close();
+    			}
 			} catch (SQLException ex) {
 				convertSQLException(ex);
 			}
@@ -74,26 +74,4 @@ public class JdbcTemplate {
 	public RuntimeException convertSQLException(SQLException ex) {
 		throw new RuntimeException(ex.getMessage());
 	}
-	
-/*	public void setString(int index, String str) {
-		
-		StringBuilder sb = new StringBuilder();
-		if (sql.indexOf("?") != -1) {
-			sb.append(sql.substring(0, sql.indexOf("?")));
-			sb.append("'" + str + "'");
-			sb.append(sql.substring(sql.indexOf("?") + 1));
-			this.sql = sb.toString();
-		}
-	}
-	
-	public void setInt(int index, Integer i) {
-		
-		StringBuilder sb = new StringBuilder();
-		if (sql.indexOf("?") != -1) {
-			sb.append(sql.substring(0, sql.indexOf("?")));
-			sb.append("" + i);
-			sb.append(sql.substring(sql.indexOf("?") + 1));
-			this.sql = sb.toString();
-		}
-	}*/
 }

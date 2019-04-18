@@ -13,11 +13,11 @@ public class TestCase {
 		BeanFactory applicationContext = new ApplicationContext("beans.xml"); // 获取上下文
         IUserService service = (IUserService) applicationContext.getBean("userService");	//取得bean
         User user = new User();
-        user.setUserid("10118");
+        user.setUserid("10119");
         user.setUsername("zhangsan");
         service.save(user); // 将user保存入库
         
-        User query = service.get("10118");
+        User query = service.get("10119");
         System.out.println("user=" + query);
         
         user.setUsername("save address");

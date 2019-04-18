@@ -7,6 +7,13 @@ import java.lang.reflect.Proxy;
 
 import com.asiainfo.simulation.aop.advice.IAdvice;
 
+/**
+ * 
+ * @Description: aop代理工厂
+ * @author chenzq  
+ * @date 2019年2月4日 上午9:27:42
+ * @version V1.0
+ */
 public class ProxyFactoryBean {
 	
 	// 增强对象 

@@ -33,6 +33,6 @@ public class UserServiceImpl implements IUserService {
 		
 		this.userDao.update(user);
 		this.addressDao.save(address);
-		//throw new RuntimeException("ex");
+		throw new RuntimeException("ex");
 	}
 }

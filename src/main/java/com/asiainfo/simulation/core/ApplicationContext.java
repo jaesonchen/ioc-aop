@@ -15,6 +15,13 @@ import com.asiainfo.simulation.condition.Conditional;
 import com.asiainfo.simulation.condition.ICondition;
 import com.asiainfo.simulation.support.Context;
 
+/**
+ * 
+ * @Description: ioc容器
+ * @author chenzq  
+ * @date 2019年2月4日 上午9:32:49
+ * @version V1.0
+ */
 public class ApplicationContext implements BeanFactory {
 
 	private Map<String, Object> beans = new HashMap<String, Object>();
@@ -72,8 +79,9 @@ public class ApplicationContext implements BeanFactory {
 				Class<?> clazz = conditional.value();
 				if (clazz != null) {
 					ICondition con = (ICondition) clazz.newInstance();
-					if (!con.execute())
+					if (!con.execute()) {
 						continue;
+					}
 				}
 			}
 			
@@ -85,8 +93,9 @@ public class ApplicationContext implements BeanFactory {
 				obj = constructor.newInstance(conArg);
 			}
 			
-			if (beans.get(id) != null)
+			if (beans.get(id) != null) {
 				throw new RuntimeException("error in build " + obj.getClass().getName() + ", caused by duplicate bean name");
+			}
 			beans.put(id, obj);
 		}
 	}
@@ -107,14 +116,16 @@ public class ApplicationContext implements BeanFactory {
 				Class<?> clazz = conditional.value();
 				if (clazz != null) {
 					ICondition con = (ICondition) clazz.newInstance();
-					if (!con.execute())
+					if (!con.execute()) {
 						continue;
+					}
 				}
 			}
 			
-			List<Element> propertyList = (List<Element>) element.getChildren("property");
-			if (propertyList == null)
+			List<Element> propertyList = element.getChildren("property");
+			if (propertyList == null) {
 				continue;
+			}
 			
 			for (Element propertyElement : propertyList) {
 				
@@ -134,7 +145,7 @@ public class ApplicationContext implements BeanFactory {
 				}
 					
 				Object obj = beans.get(id);
-				//拼凑方法名，实现setUserDao方法 
+				//拼凑方法名，实现set方法 
 				String methodName = "set" + name.substring(0, 1).toUpperCase() + name.substring(1);
 				if (value != null) {
 					Method m1 = obj.getClass().getMethod(methodName, propertyClazz);
@@ -168,8 +179,9 @@ public class ApplicationContext implements BeanFactory {
 			String proxy = element.getAttributeValue("proxy");	//取id值
 			Object proxyBean = Class.forName(proxy).newInstance();
 			List<Element> propertyList = (List<Element>) element.getChildren("property");
-			if (propertyList == null)
+			if (propertyList == null) {
 				continue;
+			}
 			
 			String aopName = null;
 			for (Element propertyElement : propertyList) {
@@ -180,7 +192,7 @@ public class ApplicationContext implements BeanFactory {
 				String methodName = "set" + name.substring(0, 1).toUpperCase() + name.substring(1);
 				Object bean = beans.get(ref);
 				
-				Class<?> clazz;
+				Class<?> clazz = null;
 				if (bean instanceof IAdvice) {
 					clazz = IAdvice.class;
 				} else {
